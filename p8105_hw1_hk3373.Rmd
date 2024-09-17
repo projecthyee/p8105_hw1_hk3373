@@ -1,0 +1,62 @@
+---
+title: "P8105 Homework 1"
+author: "Hyun Kim (hk3373)"  
+date: 2024-09-17
+output: github_document
+---
+
+``` {r setup, echo = FALSE, message = FALSE}
+library(tidyverse)
+```
+
+# Problem 1
+
+## Load the penguins dataset:
+``` {r load_dataset}
+data("penguins", package = "palmerpenguins")
+str(penguins)
+```
+
+The dataset contains various information about penguins: species and sex as factor variables, bill length (mm) and bill depth (mm) as numeric variables, and flipper length (mm), body mass (g) and year as integer variables. 
+
+The dataset has `r nrow(penguins)` rows and `r ncol(penguins)` columns with a mean flipper length of `r round(mean(pull(penguins, flipper_length_mm), na.rm=TRUE), 2)` mm.
+
+## Plot and export flipper length vs. bill length:
+```{r plot_export_scatter}
+ggplot(penguins, aes(y = flipper_length_mm, x = bill_length_mm, 
+                     color = species)) + geom_point(na.rm=TRUE)
+
+ggsave('flipper_vs_bill.pdf')
+```
+
+# Problem 2
+
+## Create data frame:##
+```{r create_data_frame}
+dataFrame = tibble(
+  sampleVector = rnorm(10),
+  logicalVector = sampleVector > 0,
+  charVector = c('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'),
+  factorVector = factor(c('level1', 'level2', 'level3', 'level1', 'level2', 
+                          'level3', 'level1', 'level2', 'level3', 'level1'))
+)
+```
+
+## Calculate the mean of each variable:
+```{r calculate_mean}
+sampleMean = mean(pull(dataFrame, sampleVector))
+logicalMean = mean(pull(dataFrame, logicalVector))
+charMean = mean(pull(dataFrame, charVector))
+factorMean = mean(pull(dataFrame, factorVector))
+```
+
+We are able to calculate the mean for the random sample and logical variables. However, we a get warning and are returned a value of NA when we try to calculate the mean for the character and factor variables.
+
+## Apply as.numeric to the logical, character and factor variables:
+```{r convert_to_numeric}
+as.numeric(pull(dataFrame, logicalVector))
+as.numeric(pull(dataFrame, charVector))
+as.numeric(pull(dataFrame, factorVector))
+```
+
+The values of the logical variables are converted to 1 (TRUE) or 0 (FALSE), allowing us to calculate the mean. On the other hand, the values of the character variables are converted to NA, resulting in NA when we calculate the mean. However, although the values of the factor variables can be converted to numeric values (1, 2 or 3) since we have three different factor levels, we are unable to calculate the mean because factor variables are categorical. 
